@@ -91,8 +91,8 @@ def get_current_user(token: dict = Depends(JWTBearer()), db: Session = Depends(g
     """
     email: (Any | None) = token.get("sub")
     if email is None:
-        raise HTTPException(status_code=401, detail="Invalid authentication credentials")
+        raise HTTPException(status_code=sac.HTTP_UNAUTHORIZED, detail="Invalid authentication credentials")
     user: (User | None) = db.query(models.User).filter(models.User.email == email).first()
     if user is None:
-        raise HTTPException(status_code=401, detail="User not found")
+        raise HTTPException(status_code=sac.HTTP_UNAUTHORIZED, detail="User not found")
     return user

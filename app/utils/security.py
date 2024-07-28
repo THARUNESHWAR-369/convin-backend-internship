@@ -3,7 +3,9 @@ from jose import jwt
 from datetime import datetime, timedelta
 from app.config.config import settings
 import time
+from datetime import timezone
 from typing import Any, Dict
+import os
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -44,11 +46,11 @@ def create_access_token(data: dict, expires_delta: timedelta = None) -> str:
         str: The encoded JWT token.
     """
     if expires_delta:
-        expire: datetime = datetime.utcnow() + expires_delta
+        expire: datetime = datetime.now(timezone.utc) + expires_delta
     else:
-        expire: datetime = datetime.utcnow() + timedelta(minutes=15)
-    data.update({"exp": expire})
-    encoded_jwt: str = jwt.encode(data, settings.SECRET_KEY.value, algorithm=settings.ALGORITHM.value)
+        expire: datetime = datetime.now(timezone.utc) + timedelta(minutes=15)
+    data["exp"] = expire
+    encoded_jwt: str = jwt.encode(data, os.environ.get("SECRET_KEY"), algorithm=os.environ.get("HASH_ALGORITHM"))
     return encoded_jwt
 
 def decode_jwt(token: str) -> dict:
@@ -62,7 +64,7 @@ def decode_jwt(token: str) -> dict:
         dict: The decoded token data if the token is valid and not expired, otherwise an empty dictionary.
     """
     try:
-        decoded_token: Dict[str, Any] = jwt.decode(token, settings.SECRET_KEY.value, algorithms=[settings.ALGORITHM.value])
+        decoded_token: Dict[str, Any] = jwt.decode(token, os.environ.get("SECRET_KEY"), algorithms=[os.environ.get("HASH_ALGORITHM")])
         return decoded_token if decoded_token["exp"] >= time.time() else None
-    except:
+    except Exception:
         return {}

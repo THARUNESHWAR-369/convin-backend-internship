@@ -9,11 +9,16 @@ from app.utils.curd import get_user_by_email
 from app.utils.dependencies import get_db
 from app.config.config import settings
 from typing import Dict
+import os
+from app.utils.status import status_codes as sac
 
-router : APIRouter = APIRouter()
+router: APIRouter = APIRouter()
+
 
 @router.post("/token", response_model=Token)
-def login(db: Session = Depends(get_db), form_data: AuthUser = Depends()) -> Dict[str, str]:
+def login(
+    db: Session = Depends(get_db), form_data: AuthUser = Depends()
+) -> Dict[str, str]:
     """
     Authenticate the user and return an access token.
 
@@ -31,8 +36,14 @@ def login(db: Session = Depends(get_db), form_data: AuthUser = Depends()) -> Dic
         HTTPException: If the email or password is incorrect, raises a 401 Unauthorized error.
     """
     user: User | None = get_user_by_email(db, email=form_data.email)
-    if not user or not security.verify_password(form_data.password, user.hashed_password):
-        raise HTTPException(status_code=401, detail="Incorrect email or password")
-    access_token_expires : timedelta = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES.value)
-    access_token : str = security.create_access_token(data={"sub": user.email}, expires_delta=access_token_expires)
+    if not user or not security.verify_password(
+        form_data.password, user.hashed_password
+    ):
+        raise HTTPException(status_code=sac.HTTP_UNAUTHORIZED, detail="Incorrect email or password")
+    access_token_expires: timedelta = timedelta(
+        minutes=float(os.environ.get("ACCESS_TOKEN_EXPIRE_MINUTES"))
+    )
+    access_token: str = security.create_access_token(
+        data={"sub": user.email}, expires_delta=access_token_expires
+    )
     return {"access_token": access_token, "token_type": "bearer"}

@@ -42,7 +42,20 @@ SECRET_KEY="<your key>"
 ```bash
 uvicorn app.main:app --reload
 ```
-#### Open your browser and navigate to http://127.0.0.1:8000/docs#/ to see the application running.
+
+### Docker Setup
+
+#### Build the Docker Image
+```bash
+docker build -t convin-backend-internship.
+```
+
+#### Run the Docker Container
+```bash
+docker run -d --name convin-backend-intern -p 8000:8000 convin-backend-intern-project
+```
+
+### Open your browser and navigate to http://127.0.0.1:8000/docs#/ to see the application running.
 
 ## Running Tests
 
