@@ -1,0 +1,15 @@
+version: '3.9'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    environment:
+      - SQLALCHEMY_DATABASE_URL="sqlite:///./app/database/expense_sharing_app.db"
+      - SECRET_KEY="2908902123238989039028"
+      - SQLALCHEMY_DATABASE_URL_TESTING_DB="sqlite:///./app/database/test_expense_sharing_app.db"
+      - HASH_ALGORITHM="HS256"
+      - ACCESS_TOKEN_EXPIRE_MINUTES="30"
