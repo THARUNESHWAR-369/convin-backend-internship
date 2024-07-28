@@ -1,0 +1,7 @@
+User ID,Total Amount,Expense ID,Description,Amount,Split Method
+5,11994.0,1,looloo mall - Shirt,499.0,equal
+5,11994.0,2,looloo mall - Shirt,499.0,exact
+5,11994.0,3,looloo mall - Shirt,499.0,exact
+5,11994.0,4,looloo mall - Lunch,3499.0,percentage
+5,11994.0,5,looloo mall - Lunch,3499.0,percentage
+5,11994.0,6,looloo mall - Lunch,3499.0,percentage

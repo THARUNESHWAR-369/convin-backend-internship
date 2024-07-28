@@ -55,7 +55,7 @@ docker build -t convin-backend-internship.
 docker run -d --name convin-backend-intern -p 8000:8000 convin-backend-intern-project
 ```
 
-### Open your browser and navigate to http://127.0.0.1:8000/docs#/ to see the application running.
+#### Open your browser and navigate to http://127.0.0.1:8000/docs#/ to see the application running.
 
 ## Running Tests
 
