@@ -63,3 +63,11 @@ docker run -d --name convin-backend-intern -p 8000:8000 convin-backend-intern-pr
 ```bash
 pytest tests/
 ```
+
+### Database Architecture Diagram
+![db_arch](https://github.com/user-attachments/assets/2267b083-cf54-4076-992f-da30eeb1b9d0)
+
+### Sample Screenshots
+![s1](https://github.com/user-attachments/assets/de15a6ba-0ea7-4e2d-b26e-44dbd55a8067)
+
+#### > Refer Sample Outputs directory for balance sheet file
