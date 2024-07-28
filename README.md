@@ -70,4 +70,4 @@ pytest tests/
 ### Sample Screenshots
 ![s1](https://github.com/user-attachments/assets/de15a6ba-0ea7-4e2d-b26e-44dbd55a8067)
 
-#### > Refer Sample Outputs directory for balance sheet file
+> #### Refer Sample Outputs directory for balance sheet file
