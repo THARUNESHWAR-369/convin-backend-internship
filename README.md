@@ -14,6 +14,7 @@
 ```bash
 git https://github.com/THARUNESHWAR-369/convin-backend-internship.git
 ```
+
 ```bash
 cd convin-backend-internship
 ```
@@ -21,14 +22,17 @@ cd convin-backend-internship
 ### Install Dependencies
 
 #### Windows & Linux
+
 - Open Terminal / Command Prompt / Powershell.
 - Navigate to the project directory.
 - Install Requirements:
+
 ```bash
 pip install requirements.txt
 ```
 
 ## SecretKet Setup
+
 - Copy .env.example to .env file
 - Open .env & update `SECRET_KEY`
 
@@ -39,6 +43,7 @@ SECRET_KEY="<your key>"
 ## Running the Application
 
 ### Windows & Linux
+
 ```bash
 uvicorn app.main:app --reload
 ```
@@ -46,11 +51,13 @@ uvicorn app.main:app --reload
 ### Docker Setup
 
 #### Build the Docker Image
+
 ```bash
 docker build -t convin-backend-internship.
 ```
 
 #### Run the Docker Container
+
 ```bash
 docker run -d --name convin-backend-intern -p 8000:8000 convin-backend-intern-project
 ```
@@ -60,14 +67,166 @@ docker run -d --name convin-backend-intern -p 8000:8000 convin-backend-intern-pr
 ## Running Tests
 
 ### Run Tests
+
 ```bash
 pytest tests/
 ```
 
 ### Database Architecture Diagram
+
 ![db_arch](https://github.com/user-attachments/assets/2267b083-cf54-4076-992f-da30eeb1b9d0)
 
 ### Sample Screenshots
+
 ![s1](https://github.com/user-attachments/assets/de15a6ba-0ea7-4e2d-b26e-44dbd55a8067)
 
 > #### Refer Sample Outputs directory for balance sheet file
+
+## Endpoints
+
+### User Routes
+
+<ul>
+  <li>Create a new user</li>
+  <ul>
+    <li>`POST /users/`</li>
+    <li>Request Body
+    <br>
+
+    {
+        "email": "newuser@example.com",
+        "name": "New User",
+        "mobile": "0987654321",
+        "password": "newpassword"
+    }
+</li>
+
+  </ul>
+  
+
+  <li>Authenticate user and get token</li>
+  <ul>
+    <li>`POST /auth/token`</li>
+    <li>Request Body
+    <br>
+
+    {
+        "email": "test@example.com",
+        "password": "testpassword"
+    }
+</li>
+
+<li>Response:
+    <br>
+
+    {
+        "access_token": "string",
+        "token_type": "bearer"
+    }
+</li>
+   </ul>
+
+
+
+<li>Get current authenticated user</li>
+  <ul>
+    <li>`GET /users/current_user`</li>
+    <li>Request Header
+    <br>
+
+    {
+        "Authorization": "Bearer access_token"
+    }
+</li>
+
+<li>Response:
+    <br>
+
+    {
+        "id": 1,
+        "email": "test@example.com",
+        "name": "Test User",
+        "mobile": "1234567890"
+    }
+</li>
+   </ul>
+
+
+  
+</ul>
+
+
+### Expense Routes
+
+<ul>
+  <li>Create a new expense</li>
+  <ul>
+    <li>`POST /expenses/create_expense</li>
+    <li>Request Header
+    <br>
+
+    {
+        "Authorization": "Bearer access_token"
+    }
+
+</li>
+
+<li>Request Body
+    <br>
+
+    {
+        "amount": 100.0,
+        "description": "Test Expense",
+        "split_method": "equal",
+        "splits": [{"user_id": 1}]
+    }
+</li>
+
+<li>Response:
+    <br>
+
+    {
+        "id": 1,
+        "amount": 100.0,
+        "description": "Test Expense",
+        "split_method": "equal",
+        "owner_id": 1
+    }
+</li>
+
+  </ul>
+
+  <li>Get expenses for the current user</li>
+  <ul>
+    <li>`GET /expenses/current_user_expenses/create_expense</li>
+    <li>Request Header
+    <br>
+
+    {
+        "Authorization": "Bearer access_token"
+    }
+
+</li>
+
+
+<li>Response:
+    <br>
+
+   ```
+   [
+        {
+            "id": 1,
+            "amount": 100.0,
+            "description": "Test Expense",
+            "split_method": "equal",
+            "owner_id": 1
+        }
+   ]
+   ```
+</li>
+
+  </ul>
+  
+
+  
+</ul>

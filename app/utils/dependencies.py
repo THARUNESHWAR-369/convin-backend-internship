@@ -8,6 +8,7 @@ from app.models import models
 from typing import Any
 from app.utils.status import status_codes as sac
 
+
 def get_db() -> Any:
     """
     Provide a database session to the request context.
@@ -20,6 +21,7 @@ def get_db() -> Any:
         yield db
     finally:
         db.close()
+
 
 class JWTBearer(HTTPBearer):
     """
@@ -48,18 +50,21 @@ class JWTBearer(HTTPBearer):
         Raises:
             HTTPException: If the authentication scheme is invalid or the token is invalid/expired.
         """
-        credentials: HTTPAuthorizationCredentials = await super(JWTBearer, self).__call__(request)
-        if credentials:
-            if not credentials.scheme == "Bearer":
-                raise HTTPException(status_code=sac.HTTP_FORBIDDEN, detail="Invalid authentication scheme.")
-            token: (dict | None) = self.verify_jwt(credentials.credentials)
-            if not token:
-                raise HTTPException(status_code=sac.HTTP_FORBIDDEN, detail="Invalid token or expired token.")
-            return token
-        else:
-            raise HTTPException(status_code=sac.HTTP_FORBIDDEN, detail="Invalid authorization code.")
+        credentials: HTTPAuthorizationCredentials = await super(
+            JWTBearer, self
+        ).__call__(request)
+        if credentials.scheme != "Bearer":
+            raise HTTPException(
+                status_code=sac.HTTP_FORBIDDEN, detail="Invalid authentication scheme."
+            )
+        token: dict | None = self.verify_jwt(credentials.credentials)
+        if not token:
+            raise HTTPException(
+                status_code=sac.HTTP_FORBIDDEN, detail="Invalid token or expired token."
+            )
+        return token
 
-    def verify_jwt(self, jwtoken: str) -> (dict | None):
+    def verify_jwt(self, jwtoken: str) -> dict | None:
         """
         Verify the JWT token.
 
@@ -71,11 +76,14 @@ class JWTBearer(HTTPBearer):
         """
         try:
             payload: dict = decode_jwt(jwtoken)
-            return payload if payload else None
+            return payload or None
         except:
             return None
 
-def get_current_user(token: dict = Depends(JWTBearer()), db: Session = Depends(get_db)) -> User:
+
+def get_current_user(
+    token: dict = Depends(JWTBearer()), db: Session = Depends(get_db)
+) -> User:
     """
     Get the current user from the JWT token.
 
@@ -89,10 +97,13 @@ def get_current_user(token: dict = Depends(JWTBearer()), db: Session = Depends(g
     Raises:
         HTTPException: If the token does not contain an email or the user is not found.
     """
-    email: (Any | None) = token.get("sub")
+    email: Any | None = token.get("sub")
     if email is None:
-        raise HTTPException(status_code=sac.HTTP_UNAUTHORIZED, detail="Invalid authentication credentials")
-    user: (User | None) = db.query(models.User).filter(models.User.email == email).first()
+        raise HTTPException(
+            status_code=sac.HTTP_UNAUTHORIZED,
+            detail="Invalid authentication credentials",
+        )
+    user: User | None = db.query(models.User).filter(models.User.email == email).first()
     if user is None:
         raise HTTPException(status_code=sac.HTTP_UNAUTHORIZED, detail="User not found")
     return user
